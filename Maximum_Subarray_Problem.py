@@ -1,6 +1,8 @@
+'''
+Maximum Subarray Problem: find a contiguous subarray with the largest sum in a given array. This implementation uses the divide
+and conquer technique to reduce the runtime to Theta(nlogn). 
+'''
 import math
-
-# Maximum Subarray Problem
 def find_max_crossing_subarray(arr, low, mid, high):
     left_sum = -math.inf
     max_left = mid

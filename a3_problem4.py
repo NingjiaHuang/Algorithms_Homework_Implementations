@@ -1,4 +1,5 @@
-# Find the missing string in O(N)
+''' Compare a sorted string X with an unsorted string Y to find the missing 
+element in O(n)'''
 
 def compare_string(a, b):
     return a < b

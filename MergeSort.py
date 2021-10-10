@@ -1,5 +1,4 @@
-# Runtime of Mergesort: O(nLogn)
-
+''' Runtime of Mergesort: O(nLogn) '''
 def merge(arr,l,m,r): 
     n1 = m - l + 1
     n2 = r - m
