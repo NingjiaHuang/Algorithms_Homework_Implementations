@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{float}
+
+\begin{document}
+\section*{Solution: }
+\begin{algorithm}[H]
+    \caption{SPARSE-TRANSPOSE(R, C, V, m, n, k)}
+    \begin{algorithmic}[1]
+        \State $R' \gets$ new array$[0 \dots n]$ initializing with $0$
+        \State $C' \gets$ new array$[0 \dots k-1]$ initializing with $0$
+        \State $V' \gets$ new array$[0 \dots k-1]$ initializing with $0$
+        \State $T \gets$ new array$[0 \dots n-1]$ initializing with $0$
+        \For{\texttt{$i \gets 0$} \textbf{to} $m-1$}
+            \For{\texttt{$j \gets R[i]$} \textbf{to} $R[i+1]-1$}
+                \State $R'[C[j]] = R'[C[j]]+1$
+            \EndFor
+        \EndFor
+        \For{\texttt{$i \gets 1$} \textbf{to} $n$}
+            \State $R'[i] = R'[i-1] + R'[i]$
+        \EndFor
+        \For{\texttt{$x \gets 0$} \textbf{to} $m-1$}
+            \For{\texttt{$y \gets R[x]$} \textbf{to} $R[x+1]-1$}
+                \State $temp = R'[C[y]] + T[C[y]]$
+                \State $T[C[y]] = T[C[y]] + 1$
+                \State $C'[temp] = x$
+                \State $V'[temp] = V[y]$
+            \EndFor
+        \EndFor\\
+        \textbf{return} $(R', C', V')$
+    \end{algorithmic}
+\end{algorithm}
+
+\section*{Explanation: }
+\subsection*{line 5 to line 12: }
+Line 5 to line 12 intends to construct $R'$. Instead of counting the number of nonzero entries in each
+row, $R'$ records the number of nonzero entries in each column. This is because the transposition causes 
+the rows in $A$ to become the columns in $A'$. The outer for loop iterates from the first row of matrix $A$
+to the last row of matrix $A$. The inner for loop gets the column indexes of those nonzero entries in that row. 
+Each time we encounter a nonzero entry, we increment the value with that column index by $1$. In other words, every
+time we encounter a nonzero entry in the column of $A$, we know the transposed row will have $1$ more nonzero entry. \\ \\
+
+\noindent line 10 to line 12 transfer the array into the culmulative array. 
+
+\subsection*{line 13 to line 20: }
+Line 13 to line 20 constructs $C'$ and $V'$. 
+The outer for loop iterates through the rows of matrix $A$ (which is the same as looping through the columns of matrix $A'$). Its purpose is to find those entries whose nonzero entries are in column $x$ (with respect
+to matrix $A'$). The inner for loop examines the nonzero entries in that row. For example, when $x = 0$, $y$ iterates through $R[0]$ 
+to $R[1]-1$, which means it will examine the two nonzero entries in row $0$. If we use these indexes to look up in $C$ (e.g. $C[R[0]]$), we will find the column index of that element in $A$. \\ \\
+
+\noindent For each iteration of $x$, we are actually finding the positions of those nonzero entries whose column index is $x$. In line 15, $C[y]$ indicates the positions of the nonzero entries in row $x$ (with respect to $A$), 
+and since $R'[i]$ records the number of nonzero entries prior to the column $i$, it can tell us the index of the nonzero entry in $C'$. There will be two cases: 
+\begin{itemize}
+    \item It is the only nonzero entry in that column (in $A$), or it is the only nonzero entry in that row (in $A'$). In this case, we can safely use $R'[C[y]]$ as the index.
+    \item There are other nonzero entries before it in this row (with respect to $A'$). In this case, we need the $T$ array to keep track of the number of those entries in order to increment the index manually.
+\end{itemize}
+Therefore, line 17 find the position and value for $C'[temp]$ successfully. Similar task can be performed to find $V'[temp]$.
+
+\end{document}
